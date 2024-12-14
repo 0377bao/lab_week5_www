@@ -1,6 +1,6 @@
 # 📌 LAB WEEK 05: Sử dụng Spring Boot tạo mô hình tìm kiếm việc làm
 > File này chỉ nhằm mục đích hiển thị các màn hình đã thực hiện được. Báo cáo chi tiết ở link tài liệu
-- [Link Document]((https://docs.google.com/document/d/1tssIclqP4Zgx0FLEsoJ0wgHAiIOYpuAz/edit?usp=sharing&ouid=116467753903808882724&rtpof=true&sd=true))
+- [Link Document](https://docs.google.com/document/d/1tssIclqP4Zgx0FLEsoJ0wgHAiIOYpuAz/edit?usp=sharing&ouid=116467753903808882724&rtpof=true&sd=true)
 
 ## 🚀 **Thông tin sinh viên:**
 - ✨ Họ và tên: Huỳnh Quốc Bảo. MSSV: 21107451
