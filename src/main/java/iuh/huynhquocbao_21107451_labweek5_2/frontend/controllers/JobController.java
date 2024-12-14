@@ -84,11 +84,12 @@ public class JobController {
     }
 
     @GetMapping("/getDetail")
-    public String getDetail(Model model, @RequestParam("jobid") Long jobId) {
+    public String getDetail(Model model, @RequestParam("jobid") Long jobId, @RequestParam("isCom") Boolean isCom) {
         Job job = jobService.findById(jobId);
         model.addAttribute("job", job);
         model.addAttribute("jobSkills", jobSkillService.findByIdJobId(job.getId()));
         model.addAttribute("candidates", candidateService.findCandidatesForJob(job.getId()));
+        model.addAttribute("isCompany", isCom);
         return "jobs/jobdetail";
     }
     @GetMapping("/getSuitableCandidates")

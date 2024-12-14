@@ -194,7 +194,7 @@ C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
                                         <input type="hidden" name="jobid" th:value="${job.getId()}">
                                         <input type="submit" style="
                                         padding: 8px 12px;" class="btn btn-primary" value="Delete"></form>
-                                    <a th:href="@{/jobs/getDetail(jobid=${job.getId()})}" style="margin-left: 10px;" class="action">Detail</a>
+                                    <a th:href="@{/jobs/getDetail(jobid=${job.getId()}, isCom = ${true})}" style="margin-left: 10px;" class="action">Detail</a>
                                 </div>
                             </div>
                         </div>
