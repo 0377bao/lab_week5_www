@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CompanyHome</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-
+T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-
+C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        a, button, .header__action {
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+            padding: 10px 15px;
+            border: 1px solid darkred;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+
+        .header__action:hover, .action:hover {
+            background-color: #B03520;
+        }
+        .sidebar {
+            width: 420px;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            bottom: 0;
+        }
+        .company__infor {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            padding: 20px;
+            background-color: rgba(0,0,0, 0.9);
+            width: 100%;
+            height: 100%;
+            color: white;
+        }
+        .app {
+            display: flex;
+        }
+        .company__infor p {
+            font-size: 16px;
+            width: 100px;
+            text-align: left;
+            flex: 0 0 100px;
+        }
+        .company__infor span {
+            font-size: 16px;
+            font-weight: bold;
+            white-space: normal;
+            word-wrap: break-word
+        }
+        .company__box {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+        .action {
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1 th:if="${!isCompany}">Authentication Failed</h1>
+    <div th:if="${isCompany}" class="app">
+        <div class="sidebar">
+                <div class="company__infor">
+                    <h2 style="font-size: 25px;margin-bottom: 20px;">COMPANY INFORMATION</h2>
+                    <div class="company__box">
+                        <p>Name: </p> <span th:text="${company.compName}"></span>
+                    </div>
+                    <div class="company__box">
+                        <p>Email: </p>
+                        <span th:text="${company.email}"></span>
+                    </div>
+                    <div class="company__box">
+                        <p>Phone: </p><span th:text="${company.phone}"></span>
+                    </div>
+                    <div class="company__box">
+                        <p>Web URL: </p><span th:text="${company.webUrl}"></span>
+                    </div>
+                    <div class="company__box">
+                        <p>Address:</p> <span th:text="${company.address.getStreet()} + '/'
+                        + ${company.address.getCity()} + '/' + ${company.address.getCountry()}
+                        "></span>
+                </div>
+            </div>
+            <div class="header" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 100px;
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+                height: 80px;
+                ">
+                <h1>COMPANY HOME</h1>
+                <div style="display: flex; flex-direction: row">
+                    <a class="header__action" th:href="@{/candidates/getAll(compId=${company.id})}">Get all candidate</a>
+                    <a class="header__action" th:href="@{/candidates/getPaginated(compId=${company.id})}">Get paging candidate</a>
+                    <form th:action="@{/jobs/getAll}" method="get">
+                        <input type="hidden" name="companyname" th:value="${company.compName}">
+                        <button class="header__action" type="submit">Add Job</button>
+                    </form>
+                    <a class="header__action" th:href="@{/accounts/logout}">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <div style="
+                margin-top: 90px;
+                margin-left: 430px;
+                margin-right: 10px;
+                width: 100%;
+             " >
+            <!-- Button trigger modal -->
+            <div style="text-align: right; padding-right: 20px">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Add job
+                </button>
+            </div>
+            <div class="select-parent" style="margin-top: 10px; display: flex; align-items: center">
+            </div>
+            <div th:switch="${jobs}" style="width: 100%;" >
+                <h2 th:case="null">No Job yet!</h2>
+                <div style="width: 100%; display: flex; flex-direction: row; flex-wrap: wrap;
+                    " th:case="*">
+                    <div style="width: 25%; padding: 5px;
+                        " th:each="job : ${jobs}">
+                        <div style="
+                            padding: 15px;
+                            border: 1px solid black;
+                            border-radius: 10px;
+                            height: 100%;
+                            position: relative;
+                            padding-bottom: 80px;
+                            ">
+                            <div>
+                                <span style="font-weight: bold">Id:</span>
+                                <span th:text="${job.id}"></span>
+                            </div>
+                            <div style="margin-top: 5px">
+                                <span style="font-weight: bold">Job Name:</span>
+                                <span th:text="${job.jobName}"></span>
+                            </div>
+                            <div style="margin-top: 5px">
+                                <span style="font-weight: bold">Job Description:</span>
+                                <span th:text="${job.jobDesc}"></span>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <span style="font-size: 13px; padding: 2px 4px; background-color: aqua; border-radius: 5px">Remote</span>
+                                <span style="font-size: 13px; padding: 2px 4px; background-color: chartreuse; border-radius: 5px">Full Time</span>
+                            </div>
+                            <div style="justify-items: flex-end;  margin-top: 20px; margin-bottom: 10px;
+                                position: absolute;
+                                right: 10px;
+                                bottom: 10px;
+                            ">
+                                <div style="display: flex; flex-direction: row">
+                                    <form th:action="@{/jobs/deleteJob}" method="post">
+                                        <input type="hidden" name="companyname" th:value="${companyName}">
+                                        <input type="hidden" name="jobid" th:value="${job.getId()}">
+                                        <input type="submit" style="
+                                        padding: 8px 12px;" class="btn btn-primary" value="Delete"></form>
+                                    <a th:href="@{/jobs/getDetail(jobid=${job.getId()})}" style="margin-left: 10px;" class="action">Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add job</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" th:action="@{/jobs/addJob}">
+                        <div>
+                            <label class="form-label">
+                                Company name:
+                            </label>
+                            <input th:value="${companyName}" type="text" name="companyName" class="form-control read-only">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label class="form-label">
+                                Job name:
+                            </label>
+                            <input placeholder="Input job name" type="text" name="jobname" class="form-control">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label class="form-label">
+                                Job description:
+                            </label>
+                            <input placeholder="Input job description" type="text" name="jobdesc" class="form-control">
+                        </div>
+                        <div style="margin-top: 30px;" class="form-control">
+                            <span>Choose skill: </span>
+                            <table class="table table-hover" style="margin-top: 10px">
+                                <tr>
+                                    <th>Check</th>
+                                    <th>Description</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Level</th>
+                                    <th>More Information</th>
+                                </tr>
+                                <tr th:each="skill : ${skills}" >
+                                    <td>
+                                        <input th:id="${skill.getId()}" type="checkbox" th:value="${skill.getId()}" name="skills">
+                                    </td>
+                                    <td th:text="${skill.getSkillDescription()}"></td>
+                                    <td th:text="${skill.getSkillName()}"></td>
+                                    <td th:text="${skill.getSkillType()}"></td>
+                                    <td>
+                                        <select name="levels" class="form-control">
+                                            <option th:value="MASTER">MASTER</option>
+                                            <option value="BEGINNER">BEGINNER</option>
+                                            <option value="ADVANCED">ADVANCED</option>
+                                            <option value="PROFESSIONAL">PROFESSIONAL</option>
+                                            <option value="INTERMEDIATE">INTERMEDIATE</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" name="moreinfs" placeholder="More information">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="text-align: right; margin-top: 30px">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function handleSelectChange(value) {
+            window.location.href = "/jobs/getAll?companyname=" + value;
+        }
+    </script>
+</body>
+</html>

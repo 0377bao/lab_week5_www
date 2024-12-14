@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .app {
+        margin: 0 auto;
+        width: 95%;
+    }
+    div.inline {
+        color: black;
+        float: left;
+        padding: 5px 5px;
+        text-decoration: none;
+        display: inline-block;
+    }
+    table {
+        padding: 50px !important;
+    }
+    div.inline a.active {
+        background-color: #FBD603;
+        border:1px solid darkred;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Candidates with pagination</title>
+    <meta charset="UTF-8">
+    <title>Candidates</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-
+T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-
+C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        .header__action {
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+            padding: 10px 15px;
+            border: 1px solid darkred;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+
+        .pageBtn:hover{
+            background-color: #B03520;
+            opacity: 0.7;
+        }
+
+        .header__action:hover {
+            background-color: #B03520;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header" style="
+                position: fixed;
+                background-color: white;
+                top: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 100px;
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+                height: 80px;
+">
+    <h1>ALL CANDIDATE</h1>
+    <div style="display: flex; flex-direction: row">
+        <a class="header__action" th:href="@{/candidates/getAll(compId=${company.id})}">Get all candidate</a>
+        <a class="header__action" th:href="@{/candidates/getPaginated(compId=${company.id})}">Get paging candidate</a>
+        <form th:action="@{/jobs/getAll}" method="get">
+            <input type="hidden" name="companyname" th:value="${company.compName}">
+            <button class="header__action" type="submit">Add Job</button>
+        </form>
+    </div>
+</div>
+<div class="app" style="margin-top: 90px;">
+    <table class="table table-hover border">
+        <thead>
+        <tr style="background-color: #B03520">
+            <th>Id</th>
+            <th>Name</th>
+            <th>Dob</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="candidate, iStat : ${candidatePage.content}">
+            <td th:text="${candidate.id}"></td>
+            <td th:text="${candidate.fullName}"></td>
+            <td th:text="${candidate.dob}"></td>
+            <td th:text="${candidate.address}"></td>
+            <td th:text="${candidate.phone}"></td>
+            <td th:text="${candidate.email}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="inline" th:if="${candidatePage.totalPages > 0}" th:each="pageNumber :
+${pageNumbers}">
+        <a  style=" display: inline-block; width: 30px; height: 30px; line-height: 30px;
+            color: black;text-decoration: none;
+            text-align: center; border-radius: 5px; border: 1px solid black; margin: 5px;"
+            class="pageBtn"
+            th:href="@{/candidates/getPaginated(size=${10}, page=${pageNumber}, compId=${company.id})}"
+           th:text="${pageNumber}"
+           th:class="${pageNumber==candidatePage.number + 1} ? active"></a>
+    </div>
+</div>
+<br/>
+<!--<div class = "row"><a href="/add-candidate">Add a new Candidate</a></div>-->
+</body>
+</html>

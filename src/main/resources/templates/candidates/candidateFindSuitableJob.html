@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Candidate Suitable Job</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-
+T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+        crossorigin="anonymous">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-
+C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .select-parent {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .app {
+            margin: 0 auto;
+            width: 95%;
+        }
+        .action {
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+            padding: 5px 10px;
+            border: 1px solid darkred;
+            background-color: aqua;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app" >
+        <h2 >Jobs</h2>
+        <div class="select-parent" style="margin-top: 10px; display: flex; align-items: center">
+            <h4 >Candidate Name:</h4>
+            <span
+                    style="margin-left: 10px; font-size: 30px; font-weight: bold;"
+                    th:text="${candidate.fullName}"></span>
+        </div>
+        <div th:switch="${jobs}" >
+            <h2 th:case="null">No Job yet!</h2>
+            <div th:case="*">
+                <table class="table table-hover table-custom">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Job Name</th>
+                        <th>Job Description</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="job : ${jobs}">
+                        <td th:text="${job.id}"></td>
+                        <td th:text="${job.jobName}"></td>
+                        <td th:text="${job.jobDesc}"></td>
+                        <td>
+                            <div style="display: flex; flex-direction: row">
+                                <form th:action="@{/jobs/deleteJob}" method="post">
+                                    <input type="hidden" name="companyname" th:value="${companyName}">
+                                    <input type="hidden" name="jobid" th:value="${job.getId()}">
+                                    <input type="submit" class="action" value="Delete"></form>
+                                <a th:href="@{/jobs/getDetail(jobid=${job.getId()})}" style="margin-left: 10px;" class="action">Detail</a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

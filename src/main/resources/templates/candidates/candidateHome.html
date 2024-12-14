@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CandidateHome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        a, button {
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+            padding: 5px 10px;
+            border: 1px solid darkred;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .header__action {
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            color: black;
+            padding: 10px 15px;
+            border: 1px solid darkred;
+            border-radius: 10px;
+            margin-left: 20px;
+            margin-bottom: 0;
+        }
+        .header__action:hover, .action:hover {
+            background-color: #B03520;
+        }
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+        .company__infor p {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 16px;
+            width: 120px;
+            text-align: left;
+        }
+        .company__infor span {
+            font-size: 16px;
+            font-weight: bold;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        .company__box {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+        }
+        .sidebar {
+            width: 420px;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            position: fixed;
+            top: 80px;
+            left: 0;
+            bottom: 0;
+        }
+        .company__infor {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            padding: 20px;
+            background-color: rgba(0,0,0, 0.9);
+            width: 100%;
+            height: 100%;
+            color: white;
+            font-family: system-ui;
+        }
+        .action {
+            padding: 8px 12px;
+        }
+    </style>
+</head>
+<body>
+<h1 th:if="${isCompany}">Authentication Failed</h1>
+<div th:if="${!isCompany}" class="app">
+    <div class="sidebar">
+        <div class="company__infor">
+            <h2 style="font-size: 25px; margin-bottom: 20px; font-weight: 500; margin-top: 0;">CANDIDATE INFORMATION</h2>
+            <div class="company__box">
+                <p>Name: </p> <span th:text="${candidate.fullName}"></span>
+            </div>
+            <div class="company__box">
+                <p>Email: </p>
+                <span th:text="${candidate.email}"></span>
+            </div>
+            <div class="company__box">
+                <p>Phone: </p><span th:text="${candidate.phone}"></span>
+            </div>
+            <div class="company__box">
+                <p>Date of birth: </p><span th:text="${candidate.dob}"></span>
+            </div>
+            <div class="company__box">
+                <p>Address:</p> <span th:text="${candidate.address.getStreet()} + '/'
+                        + ${candidate.address.getCity()} + '/' + ${candidate.address.getCountry()}
+                        "></span>
+            </div>
+            <h2 style="font-size: 25px; margin-bottom: 20px; font-weight: 500; margin-top: 0;">YOUR SKILL</h2>
+            <div class="company__box" th:each="skill : ${skills}">
+                <p>Skill name: </p> <span th:text="${skill.skill.skillName}"></span>
+            </div>
+        </div>
+        <div class="header" style="
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 100px;
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+                height: 80px;
+                background-color: white;
+                z-index: 1000;
+                ">
+            <h1>CANDIDATE HOME</h1>
+            <div style="display: flex; flex-direction: row">
+                <a class="header__action" th:href="@{/candidates/getAllJob(candidateId=${candidate.getId()})}">Get All job</a>
+                <a class="header__action" th:href="@{/candidates/getSuitableJob(candidateId=${candidate.getId()})}">Get suitable job</a>
+                <a class="header__action" th:href="@{/accounts/logout}">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div style="
+         margin-top: 90px;
+         margin-left: 430px;
+         margin-right: 10px;
+         width: 100%;
+    ">
+        <div th:switch="${jobs}" style="width: 100%;" >
+            <h2 th:case="null">No Job yet!</h2>
+            <div style="width: 100%; display: flex; flex-direction: row; flex-wrap: wrap;
+                    " th:case="*">
+                <div style="width: 25%; padding: 5px;
+                        " th:each="job : ${jobs}">
+                    <div style="
+                            padding: 15px;
+                            border: 1px solid black;
+                            border-radius: 10px;
+                            height: 100%;
+                            position: relative;
+                            padding-bottom: 80px;
+                            ">
+                        <div>
+                            <span style="font-weight: bold">Id:</span>
+                            <span th:text="${job.id}"></span>
+                        </div>
+                        <div style="margin-top: 5px">
+                            <span style="font-weight: bold">Job Name:</span>
+                            <span th:text="${job.jobName}"></span>
+                        </div>
+                        <div style="margin-top: 5px">
+                            <span style="font-weight: bold">Job Description:</span>
+                            <span th:text="${job.jobDesc}"></span>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <span style="font-size: 13px; padding: 2px 4px; background-color: aqua; border-radius: 5px">Remote</span>
+                            <span style="font-size: 13px; padding: 2px 4px; background-color: chartreuse; border-radius: 5px">Full Time</span>
+                        </div>
+                        <div style="justify-items: flex-end;  margin-top: 20px; margin-bottom: 10px;
+                                position: absolute;
+                                right: 10px;
+                                bottom: 10px;
+                            ">
+                            <div style="display: flex; flex-direction: row">
+                                <a th:href="@{/jobs/getDetail(jobid=${job.getId()})}" style="margin-left: 10px; margin-bottom: 0;
+                                    font-family: system-ui;
+                                " class="action">Detail</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

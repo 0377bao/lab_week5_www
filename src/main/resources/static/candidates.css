@@ -1,0 +1,10 @@
+.app {
+    display: flex;
+    justify-content: center;
+
+}
+
+.table-custom {
+    padding: 30px;
+    width: 90%
+}
